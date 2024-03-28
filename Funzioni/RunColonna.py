@@ -33,9 +33,10 @@ class Colonna:
                 print("Si forma del Ghiaccio")
                 QReb=None
                 QCond=None 
-                Status = False 
+                Status = 2 
                 Q_Comp_BG=None
                 W_Comp_BG=None
+                self.CondizioniBase()
             else:
                 print("Tutto lisio  ")
                 QReb=self.ConsumiReb()
@@ -48,6 +49,7 @@ class Colonna:
             QCond=None
             Q_Comp_BG=None
             W_Comp_BG=None
+            self.CondizioniBase()
         return QReb, QCond, Status, Q_Comp_BG, W_Comp_BG
 
     def Temp(self, Temperatura):
@@ -109,19 +111,22 @@ class Colonna:
     def TDisti(self):
         T=self.Streams.Item("Dist").Temperature.Value
         return T
-    
+
+
     def QCompBG(self):
         Q1=self.Comp.OwnedFlowsheet.Streams.Item("Q_S1").HeatFlow.Value
         Q2=self.Comp.OwnedFlowsheet.Streams.Item("Q_S2").HeatFlow.Value
         Q3=self.Comp.OwnedFlowsheet.Streams.Item("Q_S3").HeatFlow.Value
-        Q=Q1+Q2+Q3
+        Q4=self.Comp.OwnedFlowsheet.Streams.Item("Q_S3.2").HeatFlow.Value
+        Q=Q1+Q2+Q3+Q4
         return Q
     
     def WCompBG(self):
         W1=self.Comp.OwnedFlowsheet.Streams.Item("W_C1").Power.Value
         W2=self.Comp.OwnedFlowsheet.Streams.Item("W_C2").Power.Value
         W3=self.Comp.OwnedFlowsheet.Streams.Item("W_C3").Power.Value
-        W=W1+W2+W3
+        W4=self.Comp.OwnedFlowsheet.Streams.Item("W_S4").Power.Value
+        W=W1+W2+W4
         return W
     
     def RunRR(self,RR):
@@ -145,3 +150,9 @@ class Colonna:
             if T_dis_calc == 1 or T_reflx_calc==1 or T_2cond_calc==1:
                 Status=False
         return Status
+
+    def CondizioniBase(self):
+        Temperatura=-66
+        RR=2.45
+        T = self.Blocco.ColumnFlowsheet.Specifications.Item('Temperature')
+        T.GoalValue = Temperatura

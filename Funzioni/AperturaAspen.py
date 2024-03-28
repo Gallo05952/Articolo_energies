@@ -17,6 +17,7 @@ class AspenHYSYS:
             self.HySolver = self.hysys_sim.Solver
             self.Stream = self.hysys_sim.Flowsheet.Streams
             self.Blocchi = self.hysys_sim.Flowsheet.Operations
+            self.hysys_app.ChangePreferencesToMinimizePopupWindows(True)
             # self.hysys_sim.Visible=1
             return self.HySolver, self.Stream, self.Blocchi, self.hysys_sim
         except Exception as e:
@@ -31,3 +32,5 @@ class InserimentoComposizione:
         biogas=self.Stream.Item("BG")
         biogas.ComponentMolarFraction.Values=Composizione
         print("Cambio composizione effettuato")
+    
+    
