@@ -17,13 +17,15 @@ else:
 i=1
 data=[]
 ComposizioneBottomV=[]
+puntiRR=9
+puntiPres=1
 T=np.linspace(-50,-70,21)
-RR=np.linspace(1.4,3,9)
+RR=np.linspace(1.4,3,puntiRR)
 #RR=np.linspace(2.54,2.54,1)
-NStadi =np.linspace(11,25,8)
+NStadi =np.linspace(8,15,8)
 Comp=Blocchi.Item("CompressoreBG")
 Colonn=Blocchi.Item("T-100")
-Pressure=np.linspace(5050,7050,5) #14
+Pressure=np.linspace(5050,5050,puntiPres) #14
 #! Definizione delle composizioni iniziali
 IntialComposition = [[0.6,0.36,0.02,0.02],[0.5,0.46,0.02,0.02],[0.5,0.43,0.05,0.02],[0.5,0.43,0.02,0.05]]
 for comp in IntialComposition:
@@ -32,6 +34,7 @@ for comp in IntialComposition:
     for stadi in NStadi:
         CambioStadi(Blocchi,HySolver).CambioStadio(stadi)
         print("Cambio Stadi effettuato")
+        Tf2=0
         for Temp in T:   
             limitT=Temp-1
             for RRs in RR:
@@ -41,7 +44,7 @@ for comp in IntialComposition:
                     Status=False
                     while Status==False and Temp>limitT:                                                       #* Sto valutando l'effetto della temperatura in maniera isolata
                         run_colonna.Temp(Temp)
-                        Qreb, QCond, Status, Q_Comp_BG, W_Comp_BG =run_colonna.RunColonna()
+                        Qreb, QCond, Status, Q_Comp_BG, W_Comp_BG, Tf =run_colonna.RunColonna()
                         print("Temperatura: ",Temp," Reflux Ratio: ",RRs," Pressione: ",p," Stadi: ",stadi," Status: ",Status)
                         if Status==False: Temp=Temp-0.1  
                         if Status==2: Status=True                
@@ -63,10 +66,14 @@ for comp in IntialComposition:
                         Q_Comp_BG=run_colonna.ConsumiReb()
                         W_Comp_BG=run_colonna.ConsumiCond()
                         FeedStage=CambioStadi(Blocchi,HySolver).FeedStage()
-                
+                    Tf2+=Tf
+                    #print("TF2",Tf2,"Tf",Tf)
                     data.append({"Q_Condenser": QCond,"Q_Reboiler":Qreb,"Composizioni Finali":Composizione, "Temperature":T_in,"Reflux Ratio":RRs,"Pressione":p,"Numero di Sradi":stadi,"Feed Stage":FeedStage, "Distillato":Distillato,"Comp iniziale":comp,"CompBott":ComposizioneBottom,"Q Comp":Q_Comp_BG,"W Comp":W_Comp_BG})
-                    time.sleep(1)
-    with open("Dati Composizione1."+str(i)+".json", "w") as json_file:
+            print("TF2",Tf2,"PuntiRRep",puntiRR*puntiPres)            
+            if Tf2>=((puntiRR*puntiPres)): break
+        time.sleep(1)
+                
+    with open("Dati Composizione2."+str(i)+".json", "w") as json_file:
         for item in data:
             json.dump(item, json_file)
             json_file.write('\n')

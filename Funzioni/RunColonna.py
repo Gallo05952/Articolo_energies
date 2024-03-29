@@ -37,12 +37,14 @@ class Colonna:
                 Q_Comp_BG=None
                 W_Comp_BG=None
                 self.CondizioniBase()
+                Tf=1
             else:
                 print("Tutto lisio  ")
                 QReb=self.ConsumiReb()
                 QCond=self.ConsumiCond()
                 Q_Comp_BG=self.QCompBG()
                 W_Comp_BG=self.WCompBG()
+                Tf=0
         else:
             print("La colonna non è arrivata a convergenza")
             QReb=None
@@ -50,7 +52,8 @@ class Colonna:
             Q_Comp_BG=None
             W_Comp_BG=None
             self.CondizioniBase()
-        return QReb, QCond, Status, Q_Comp_BG, W_Comp_BG
+            Tf=0
+        return QReb, QCond, Status, Q_Comp_BG, W_Comp_BG, Tf
 
     def Temp(self, Temperatura):
         T = self.Blocco.ColumnFlowsheet.Specifications.Item('Temperature')
