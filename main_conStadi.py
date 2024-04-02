@@ -22,7 +22,7 @@ puntiPres=1
 T=np.linspace(-50,-70,21)
 RR=np.linspace(1.4,3,puntiRR)
 #RR=np.linspace(2.54,2.54,1)
-NStadi =np.linspace(8,15,8)
+NStadi =np.linspace(4,12,9)
 Comp=Blocchi.Item("CompressoreBG")
 Colonn=Blocchi.Item("T-100")
 Pressure=np.linspace(5050,5050,puntiPres) #14
@@ -73,7 +73,7 @@ for comp in IntialComposition:
             if Tf2>=((puntiRR*puntiPres)): break
         time.sleep(1)
                 
-    with open("Dati Composizione2."+str(i)+".json", "w") as json_file:
+    with open("Dati Composizione3."+str(i)+".json", "w") as json_file:
         for item in data:
             json.dump(item, json_file)
             json_file.write('\n')
